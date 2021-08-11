@@ -29,6 +29,16 @@ class SignInPage extends StatelessWidget {
     }
   }
 
+  Future<void> _signInGoogle() async {
+    try {
+      auth.signInGoogle();
+      print("Signing Google SUCESS");
+    } catch (e) {
+      print(e);
+      print("Signing Google Failure");
+    }
+  }
+
   Widget _getBody() {
     return Padding(
       padding: EdgeInsets.all(12),
@@ -47,7 +57,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.black87,
             imagePath: "assets/images/google-logo.png",
             backgroundColor: Colors.white70,
-            onClickListener: () {},
+            onClickListener: _signInGoogle,
           ),
           SizedBox(height: 8),
           SignInImageButton(
