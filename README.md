@@ -1,16 +1,13 @@
-# flutter_application_1
+# Time Tracke Flutter
 
-A new Flutter project.
+This is project developed in Flutter
+On this project I expose what I know from Flutter. Here you will find a app that has
+- login screen
 
-## Getting Started
+To perform this project I've used:
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Flutter
+- Firebase Authentication
+  - Guest Signin
+  - Google Signin
+  - Facebook Signin
