@@ -39,6 +39,16 @@ class SignInPage extends StatelessWidget {
     }
   }
 
+  Future<void> _signInFacebook() async {
+    try {
+      auth.signInFacebook();
+      print("Signing Facebook SUCESS");
+    } catch (e) {
+      print(e);
+      print("Signing Facebook Failure");
+    }
+  }
+
   Widget _getBody() {
     return Padding(
       padding: EdgeInsets.all(12),
@@ -65,7 +75,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             imagePath: "assets/images/facebook-logo.png",
             backgroundColor: Color(0xFF334D92),
-            onClickListener: () {},
+            onClickListener: _signInFacebook,
           ),
           SizedBox(height: 8),
           SignInButton(
