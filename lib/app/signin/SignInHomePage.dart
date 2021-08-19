@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app/signin/SignInEmailPage.dart';
-import 'package:flutter_application_1/app/signin/SignInImageButton.dart';
 import 'package:flutter_application_1/app/signin/signinbutton.dart';
+import 'package:flutter_application_1/app/signin/widget/SignInImageButton.dart';
 import 'package:flutter_application_1/commonwidget/CustomToolBar.dart';
 import 'package:flutter_application_1/service/Auth.dart';
 
@@ -102,7 +102,7 @@ class SignInPage extends StatelessWidget {
     print("click");
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-          fullscreenDialog: true, builder: (context) => SignInEmailPage()),
+          fullscreenDialog: true, builder: (context) => SignInEmailPage(auth)),
     );
   }
 }

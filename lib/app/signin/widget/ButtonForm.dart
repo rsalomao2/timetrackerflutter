@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/commonwidget/CustomButton.dart';
 
-class CustomButtonForm extends CustomButton {
-  CustomButtonForm({
+class ButtonForm extends CustomButton {
+  ButtonForm({
     required String label,
     required VoidCallback onClick,
   }) : super(
