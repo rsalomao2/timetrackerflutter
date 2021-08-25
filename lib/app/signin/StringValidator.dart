@@ -10,7 +10,6 @@ class NonEmptyValidator implements StringValidator {
 }
 
 mixin EmailAndPassowrdValidator {
-  final errorText = "Not empty";
   final StringValidator emailValidator = NonEmptyValidator();
   final StringValidator passwordValidator = NonEmptyValidator();
 }

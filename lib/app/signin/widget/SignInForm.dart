@@ -72,7 +72,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
 
   TextField _buildPasswordTextField() {
     final errorText = _isSignInPressed && !widget.emailValidator.isValid(_email)
-        ? "Not empty"
+        ? "Password can't be empty"
         : null;
     return TextField(
       controller: _passwordTextController,
@@ -89,7 +89,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
 
   TextField _buildEmailtTextField() {
     final errorText = _isSignInPressed && !widget.emailValidator.isValid(_email)
-        ? "Not empty"
+        ? "Email can't be empty"
         : null;
     return TextField(
       controller: _emailTextController,
@@ -147,7 +147,6 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
     setState(() {
       isSigninEnabled = widget.emailValidator.isValid(_email) &&
           widget.passwordValidator.isValid(_password);
-      print("Enable: $isSigninEnabled");
     });
   }
 }
