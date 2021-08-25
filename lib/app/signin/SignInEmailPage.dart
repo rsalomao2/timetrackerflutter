@@ -22,7 +22,7 @@ class _SignInEmailPageState extends State<SignInEmailPage> {
     return Padding(
       padding: EdgeInsets.all(16),
       child: Card(
-        child: SignUpForm(widget.auth),
+        child: EmailSignUpForm(widget.auth),
       ),
     );
   }

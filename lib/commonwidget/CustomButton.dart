@@ -19,7 +19,9 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(color),
+          backgroundColor: onClickListener != null
+              ? MaterialStateProperty.all(color)
+              : MaterialStateProperty.all(Colors.grey),
           elevation: MaterialStateProperty.all(2),
           padding:
               MaterialStateProperty.all<EdgeInsets>(EdgeInsets.all(padding)),

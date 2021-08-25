@@ -4,7 +4,7 @@ import 'package:flutter_application_1/commonwidget/CustomButton.dart';
 class ButtonForm extends CustomButton {
   ButtonForm({
     required String label,
-    required VoidCallback onClick,
+    required VoidCallback? onClick,
   }) : super(
           child: Text(
             label,

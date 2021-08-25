@@ -1,18 +1,17 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/app/signin/StringValidator.dart';
 import 'package:flutter_application_1/app/signin/widget/ButtonForm.dart';
 import 'package:flutter_application_1/service/Auth.dart';
 
-class SignUpForm extends StatefulWidget {
+class EmailSignUpForm extends StatefulWidget with EmailAndPassowrdValidator {
+  EmailSignUpForm(this._auth);
   final AuthBase _auth;
-
-  const SignUpForm(this._auth);
-
   @override
-  _SignUpFormState createState() => _SignUpFormState();
+  _EmailSignUpFormState createState() => _EmailSignUpFormState();
 }
 
-class _SignUpFormState extends State<SignUpForm> {
+class _EmailSignUpFormState extends State<EmailSignUpForm> {
   final TextEditingController _emailTextController = TextEditingController();
   final TextEditingController _passwordTextController = TextEditingController();
   final _emailFocusNode = FocusNode();
@@ -20,6 +19,8 @@ class _SignUpFormState extends State<SignUpForm> {
   EmailSignInType _currentFormtype = EmailSignInType.SIGN_IN;
   String get _email => _emailTextController.text;
   String get _password => _passwordTextController.text;
+  bool isSigninEnabled = false;
+  bool _isSignInPressed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class _SignUpFormState extends State<SignUpForm> {
       ),
       ButtonForm(
         label: _primaryButtonText,
-        onClick: () => _onPrimaryButtonClick(),
+        onClick: isSigninEnabled ? _onPrimaryButtonClick : null,
       ),
       SizedBox(
         height: 12,
@@ -70,30 +71,36 @@ class _SignUpFormState extends State<SignUpForm> {
   }
 
   TextField _buildPasswordTextField() {
+    final errorText = _isSignInPressed && !widget.emailValidator.isValid(_email)
+        ? "Not empty"
+        : null;
     return TextField(
       controller: _passwordTextController,
       decoration: InputDecoration(
-        hintText: "*****",
-        labelText: "Password",
-      ),
+          hintText: "*****", labelText: "Password", errorText: errorText),
       obscureText: true,
       keyboardType: TextInputType.visiblePassword,
       textInputAction: TextInputAction.done,
       onEditingComplete: _onPasswordEditingComplete,
+      onChanged: _updateState,
       focusNode: _passowrdFocusNode,
     );
   }
 
   TextField _buildEmailtTextField() {
+    final errorText = _isSignInPressed && !widget.emailValidator.isValid(_email)
+        ? "Not empty"
+        : null;
     return TextField(
       controller: _emailTextController,
       decoration: InputDecoration(
-        hintText: "email@email.com",
-        labelText: "Email",
-      ),
+          hintText: "email@email.com",
+          labelText: "Email",
+          errorText: errorText),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
       focusNode: _emailFocusNode,
+      onChanged: _updateState,
       onEditingComplete: _emailEditingComplete,
     );
   }
@@ -101,6 +108,7 @@ class _SignUpFormState extends State<SignUpForm> {
   void _onPrimaryButtonClick() async {
     print("email: ${_emailTextController.text}");
     print("email: ${_passwordTextController.text}");
+    _isSignInPressed = true;
     try {
       User? user;
       if (_currentFormtype == EmailSignInType.SIGN_IN)
@@ -124,6 +132,7 @@ class _SignUpFormState extends State<SignUpForm> {
     });
     _emailTextController.clear();
     _passwordTextController.clear();
+    _isSignInPressed = false;
   }
 
   void _emailEditingComplete() {
@@ -132,6 +141,14 @@ class _SignUpFormState extends State<SignUpForm> {
 
   void _onPasswordEditingComplete() {
     _onPrimaryButtonClick();
+  }
+
+  void _updateState(String value) {
+    setState(() {
+      isSigninEnabled = widget.emailValidator.isValid(_email) &&
+          widget.passwordValidator.isValid(_password);
+      print("Enable: $isSigninEnabled");
+    });
   }
 }
 
