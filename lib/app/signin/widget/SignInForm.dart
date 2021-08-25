@@ -55,7 +55,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
       ),
       ButtonForm(
         label: _primaryButtonText,
-        onClick: _isSigninEnabled ? _onPrimaryButtonClick : null,
+        onClick: _isSigninEnabled && !_isLoading ? _onPrimaryButtonClick : null,
       ),
       SizedBox(
         height: 12,
@@ -151,7 +151,10 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
   }
 
   void _emailEditingComplete() {
-    FocusScope.of(context).requestFocus(_passowrdFocusNode);
+    final newFocus = widget.emailValidator.isValid(_email)
+        ? _passowrdFocusNode
+        : _emailFocusNode;
+    FocusScope.of(context).requestFocus(newFocus);
   }
 
   void _onPasswordEditingComplete() {

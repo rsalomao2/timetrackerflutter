@@ -19,10 +19,12 @@ class _SignInEmailPageState extends State<SignInEmailPage> {
   }
 
   Widget _getContent() {
-    return Padding(
-      padding: EdgeInsets.all(16),
-      child: Card(
-        child: EmailSignUpForm(widget.auth),
+    return SingleChildScrollView(
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Card(
+          child: EmailSignUpForm(widget.auth),
+        ),
       ),
     );
   }
