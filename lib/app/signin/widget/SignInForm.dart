@@ -19,8 +19,9 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
   EmailSignInType _currentFormtype = EmailSignInType.SIGN_IN;
   String get _email => _emailTextController.text;
   String get _password => _passwordTextController.text;
-  bool isSigninEnabled = false;
+  bool _isSigninEnabled = false;
   bool _isSignInPressed = false;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +55,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
       ),
       ButtonForm(
         label: _primaryButtonText,
-        onClick: isSigninEnabled ? _onPrimaryButtonClick : null,
+        onClick: _isSigninEnabled ? _onPrimaryButtonClick : null,
       ),
       SizedBox(
         height: 12,
@@ -77,7 +78,10 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
     return TextField(
       controller: _passwordTextController,
       decoration: InputDecoration(
-          hintText: "*****", labelText: "Password", errorText: errorText),
+          hintText: "*****",
+          labelText: "Password",
+          errorText: errorText,
+          enabled: !_isLoading),
       obscureText: true,
       keyboardType: TextInputType.visiblePassword,
       textInputAction: TextInputAction.done,
@@ -96,6 +100,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
       decoration: InputDecoration(
           hintText: "email@email.com",
           labelText: "Email",
+          enabled: !_isLoading,
           errorText: errorText),
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -108,7 +113,13 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
   void _onPrimaryButtonClick() async {
     print("email: ${_emailTextController.text}");
     print("email: ${_passwordTextController.text}");
-    _isSignInPressed = true;
+
+    setState(() {
+      _isSignInPressed = true;
+      _isLoading = true;
+    });
+
+    await Future.delayed(Duration(seconds: 3));
     try {
       User? user;
       if (_currentFormtype == EmailSignInType.SIGN_IN)
@@ -121,6 +132,10 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
       Navigator.of(context).pop();
     } catch (e) {
       print("SIGN IN FAILURE: $e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
 
@@ -129,10 +144,10 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
       _currentFormtype = _currentFormtype == EmailSignInType.SIGN_IN
           ? EmailSignInType.SIGN_UP
           : EmailSignInType.SIGN_IN;
+      _isSignInPressed = false;
     });
     _emailTextController.clear();
     _passwordTextController.clear();
-    _isSignInPressed = false;
   }
 
   void _emailEditingComplete() {
@@ -145,7 +160,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
 
   void _updateState(String value) {
     setState(() {
-      isSigninEnabled = widget.emailValidator.isValid(_email) &&
+      _isSigninEnabled = widget.emailValidator.isValid(_email) &&
           widget.passwordValidator.isValid(_password);
     });
   }
