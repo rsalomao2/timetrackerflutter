@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app/signin/StringValidator.dart';
 import 'package:flutter_application_1/app/signin/widget/ButtonForm.dart';
+import 'package:flutter_application_1/commonwidget/AlertDialogHelper.dart';
 import 'package:flutter_application_1/service/Auth.dart';
 
 class EmailSignUpForm extends StatefulWidget with EmailAndPassowrdValidator {
@@ -119,7 +120,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
       _isLoading = true;
     });
 
-    await Future.delayed(Duration(seconds: 3));
+    // await Future.delayed(Duration(seconds: 3));
     try {
       User? user;
       if (_currentFormtype == EmailSignInType.SIGN_IN)
@@ -132,6 +133,11 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
       Navigator.of(context).pop();
     } catch (e) {
       print("SIGN IN FAILURE: $e");
+      showCustomAlertDialog(
+          context: context,
+          title: "Login fail",
+          content: e.toString(),
+          actionLabel: "OK");
     } finally {
       setState(() {
         _isLoading = false;
