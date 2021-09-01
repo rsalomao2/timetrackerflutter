@@ -70,6 +70,7 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInAnonymously() async {
     try {
+      print("Signing ANONIMOS");
       await auth.singInAnonymously();
       print("Signing SUCESS");
     } catch (e) {
@@ -102,7 +103,7 @@ class SignInPage extends StatelessWidget {
     print("click");
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-          fullscreenDialog: true, builder: (context) => SignInEmailPage(auth)),
+          fullscreenDialog: true, builder: (context) => SignInEmailPage()),
     );
   }
 }

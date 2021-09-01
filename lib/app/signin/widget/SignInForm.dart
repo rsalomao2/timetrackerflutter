@@ -1,13 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/app/provider/AuthProvider.dart';
 import 'package:flutter_application_1/app/signin/StringValidator.dart';
 import 'package:flutter_application_1/app/signin/widget/ButtonForm.dart';
 import 'package:flutter_application_1/commonwidget/AlertDialogHelper.dart';
-import 'package:flutter_application_1/service/Auth.dart';
 
 class EmailSignUpForm extends StatefulWidget with EmailAndPassowrdValidator {
-  EmailSignUpForm(this._auth);
-  final AuthBase _auth;
   @override
   _EmailSignUpFormState createState() => _EmailSignUpFormState();
 }
@@ -112,8 +110,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
   }
 
   void _onPrimaryButtonClick() async {
-    print("email: ${_emailTextController.text}");
-    print("email: ${_passwordTextController.text}");
+    final auth = AuthProvider.of(context);
 
     setState(() {
       _isSignInPressed = true;
@@ -124,20 +121,19 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
     try {
       User? user;
       if (_currentFormtype == EmailSignInType.SIGN_IN)
-        user = await widget._auth.singInEmail(_email, _password);
+        user = await auth.singInEmail(_email, _password);
       else
-        user = await widget._auth
-            .createUserWithEmailAndPassword(_email, _password);
+        user = await auth.createUserWithEmailAndPassword(_email, _password);
 
       print("SIGN IN SUCCESS: $user");
       Navigator.of(context).pop();
     } catch (e) {
       print("SIGN IN FAILURE: $e");
-      showCustomAlertDialog(
+      showCustomAlertDialog(null, null,
           context: context,
           title: "Login fail",
           content: e.toString(),
-          actionLabel: "OK");
+          positiveActionLabel: "OK");
     } finally {
       setState(() {
         _isLoading = false;

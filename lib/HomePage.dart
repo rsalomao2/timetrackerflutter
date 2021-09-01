@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/commonwidget/AlertDialogHelper.dart';
 import 'package:flutter_application_1/service/Auth.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({required this.auth});
+  final BuildContext context;
+  const HomePage({
+    required this.context,
+    required this.auth,
+  });
 
   final AuthBase auth;
-
-  Future<void> _signOut() async {
-    try {
-      await auth.signOut();
-    } catch (e) {
-      print(e);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +18,7 @@ class HomePage extends StatelessWidget {
         title: Text("Home Page"),
         actions: [
           TextButton(
-            onPressed: _signOut,
+            onPressed: _showSingoutConfirmation,
             child: Text(
               "Logout",
               style: TextStyle(
@@ -33,5 +30,21 @@ class HomePage extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _showSingoutConfirmation() {
+    showCustomAlertDialog("Cancel", _signOut,
+        context: context,
+        title: "Sign out",
+        content: "Are you sure do you want signout from app",
+        positiveActionLabel: "Yes");
+  }
+
+  Future<void> _signOut() async {
+    try {
+      await auth.signOut();
+    } catch (e) {
+      print(e);
+    }
   }
 }
