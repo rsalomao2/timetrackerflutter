@@ -25,6 +25,7 @@ class Auth implements AuthBase {
 
   @override
   Future<User?> singInAnonymously() async {
+    Future.delayed(Duration(seconds: 5));
     final userCredential = await _firebaseAuth.signInAnonymously();
     return userCredential.user;
   }
@@ -71,7 +72,6 @@ class Auth implements AuthBase {
   @override
   Future<User?> signInFacebook() async {
     final FacebookLoginResult result = await facebookSignIn.logIn(['email']);
-
     switch (result.status) {
       case FacebookLoginStatus.loggedIn:
         final FacebookAccessToken accessToken = result.accessToken;

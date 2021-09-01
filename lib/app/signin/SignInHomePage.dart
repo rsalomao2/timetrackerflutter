@@ -7,11 +7,17 @@ import 'package:flutter_application_1/commonwidget/AlertDialogHelper.dart';
 import 'package:flutter_application_1/commonwidget/CustomToolBar.dart';
 import 'package:flutter_application_1/service/Auth.dart';
 
-class SignInPage extends StatelessWidget {
+class SignInPage extends StatefulWidget {
   const SignInPage({required this.auth});
 
   final AuthBase auth;
 
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
+  bool isLoading = false;
   @override
   Widget build(BuildContext context) {
     return CustomToolBar("Time Tracker", _getBody(context));
@@ -24,10 +30,9 @@ class SignInPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            "Sign In",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 32, fontWeight: FontWeight.w400),
+          SizedBox(
+            height: 70,
+            child: _buildHeader(),
           ),
           SizedBox(height: 48),
           SignInImageButton(
@@ -35,7 +40,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.black87,
             imagePath: "assets/images/google-logo.png",
             backgroundColor: Colors.white70,
-            onClickListener: () => _signInGoogle(context),
+            onClickListener: isLoading ? null : () => _signInGoogle(context),
           ),
           SizedBox(height: 8),
           SignInImageButton(
@@ -43,14 +48,14 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             imagePath: "assets/images/facebook-logo.png",
             backgroundColor: Color(0xFF334D92),
-            onClickListener: () => _signInFacebook(context),
+            onClickListener: isLoading ? null : () => _signInFacebook(context),
           ),
           SizedBox(height: 8),
           SignInButton(
             text: "Sign in with Email",
             textColor: Colors.white,
             backgroundColor: Colors.teal,
-            onClickListener: () => _signInEmail(context),
+            onClickListener: isLoading ? null : () => _signInEmail(context),
           ),
           SizedBox(height: 8),
           Text(
@@ -63,7 +68,8 @@ class SignInPage extends StatelessWidget {
             text: "Go anonymous",
             textColor: Colors.white,
             backgroundColor: Colors.lime,
-            onClickListener: () => _signInAnonymously(context),
+            onClickListener:
+                isLoading ? null : () => _signInAnonymously(context),
           ),
         ],
       ),
@@ -72,18 +78,21 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInAnonymously(BuildContext context) async {
     try {
+      setState(() => isLoading = true);
       print("Signing ANONIMOS");
-      await auth.singInAnonymously();
+      await widget.auth.singInAnonymously();
       print("Signing SUCESS");
     } on FirebaseException catch (e) {
       print(e.toString());
       _showErrorAlert(context, e);
+    } finally {
+      setState(() => isLoading = false);
     }
   }
 
   Future<void> _signInGoogle(BuildContext context) async {
     try {
-      auth.signInGoogle();
+      widget.auth.signInGoogle();
       print("Signing Google SUCESS");
     } on FirebaseException catch (e) {
       print(e);
@@ -93,7 +102,7 @@ class SignInPage extends StatelessWidget {
 
   Future<void> _signInFacebook(BuildContext context) async {
     try {
-      auth.signInFacebook();
+      widget.auth.signInFacebook();
       print("Signing Facebook SUCESS");
     } on FirebaseException catch (e) {
       print(e);
@@ -122,6 +131,17 @@ class SignInPage extends StatelessWidget {
         context: context,
         title: title,
         content: message,
+      );
+  }
+
+  Widget _buildHeader() {
+    if (isLoading)
+      return Center(child: CircularProgressIndicator());
+    else
+      return Text(
+        "Sign In",
+        textAlign: TextAlign.center,
+        style: TextStyle(fontSize: 32, fontWeight: FontWeight.w400),
       );
   }
 }

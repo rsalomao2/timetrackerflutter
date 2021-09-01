@@ -34,6 +34,14 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
     );
   }
 
+  void dispose() {
+    super.dispose();
+    _emailFocusNode.dispose();
+    _passowrdFocusNode.dispose();
+    _emailTextController.dispose();
+    _passwordTextController.dispose();
+  }
+
   List<Widget> _buildInputFildsForm() {
     final String _primaryButtonText =
         _currentFormtype == EmailSignInType.SIGN_IN ? "Sign In" : "Sign Up";
