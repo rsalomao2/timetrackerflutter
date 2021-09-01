@@ -1,12 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/HomePage.dart';
-import 'package:flutter_application_1/app/provider/AuthProvider.dart';
 import 'package:flutter_application_1/app/signin/SignInHomePage.dart';
+import 'package:flutter_application_1/service/Auth.dart';
+import 'package:provider/provider.dart';
 
 class LandingPage extends StatelessWidget {
   Widget build(BuildContext context) {
-    final auth = AuthProvider.of(context);
+    final auth = Provider.of<AuthBase>(context);
     return StreamBuilder<User?>(
       stream: auth.authStateChanges(),
       builder: (context, snapshot) {
