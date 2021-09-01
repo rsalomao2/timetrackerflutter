@@ -1,7 +1,9 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app/signin/SignInEmailPage.dart';
 import 'package:flutter_application_1/app/signin/widget/SignInButton.dart';
 import 'package:flutter_application_1/app/signin/widget/SignInImageButton.dart';
+import 'package:flutter_application_1/commonwidget/AlertDialogHelper.dart';
 import 'package:flutter_application_1/commonwidget/CustomToolBar.dart';
 import 'package:flutter_application_1/service/Auth.dart';
 
@@ -33,7 +35,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.black87,
             imagePath: "assets/images/google-logo.png",
             backgroundColor: Colors.white70,
-            onClickListener: _signInGoogle,
+            onClickListener: () => _signInGoogle(context),
           ),
           SizedBox(height: 8),
           SignInImageButton(
@@ -41,7 +43,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             imagePath: "assets/images/facebook-logo.png",
             backgroundColor: Color(0xFF334D92),
-            onClickListener: _signInFacebook,
+            onClickListener: () => _signInFacebook(context),
           ),
           SizedBox(height: 8),
           SignInButton(
@@ -61,41 +63,41 @@ class SignInPage extends StatelessWidget {
             text: "Go anonymous",
             textColor: Colors.white,
             backgroundColor: Colors.lime,
-            onClickListener: _signInAnonymously,
+            onClickListener: () => _signInAnonymously(context),
           ),
         ],
       ),
     );
   }
 
-  Future<void> _signInAnonymously() async {
+  Future<void> _signInAnonymously(BuildContext context) async {
     try {
       print("Signing ANONIMOS");
       await auth.singInAnonymously();
       print("Signing SUCESS");
-    } catch (e) {
+    } on FirebaseException catch (e) {
       print(e.toString());
-      print("Signing Failure");
+      _showErrorAlert(context, e);
     }
   }
 
-  Future<void> _signInGoogle() async {
+  Future<void> _signInGoogle(BuildContext context) async {
     try {
       auth.signInGoogle();
       print("Signing Google SUCESS");
-    } catch (e) {
+    } on FirebaseException catch (e) {
       print(e);
-      print("Signing Google Failure");
+      _showErrorAlert(context, e);
     }
   }
 
-  Future<void> _signInFacebook() async {
+  Future<void> _signInFacebook(BuildContext context) async {
     try {
       auth.signInFacebook();
       print("Signing Facebook SUCESS");
-    } catch (e) {
+    } on FirebaseException catch (e) {
       print(e);
-      print("Signing Facebook Failure");
+      _showErrorAlert(context, e);
     }
   }
 
@@ -105,5 +107,21 @@ class SignInPage extends StatelessWidget {
       MaterialPageRoute<void>(
           fullscreenDialog: true, builder: (context) => SignInEmailPage()),
     );
+  }
+
+  void _showErrorAlert(
+    BuildContext context,
+    FirebaseException firebaseException,
+  ) {
+    final title = "Sigin Failure";
+    final message = firebaseException.message != null
+        ? firebaseException.message!
+        : "Unable to perform your Signin";
+    if (firebaseException.code != "ERROR_ABORTED_BY_USER")
+      showCustomAlertDialog(
+        context: context,
+        title: title,
+        content: message,
+      );
   }
 }

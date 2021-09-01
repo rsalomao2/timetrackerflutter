@@ -130,7 +130,7 @@ class _EmailSignUpFormState extends State<EmailSignUpForm> {
     } on FirebaseAuthException catch (e) {
       print("SIGN IN FAILURE: ${e.message}");
       final String errorMessage = e.message != null ? e.message! : "";
-      showCustomAlertDialog(null, null,
+      showCustomAlertDialog(
           context: context,
           title: "Login fail",
           content: errorMessage,

@@ -3,13 +3,13 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future<bool> showCustomAlertDialog(
+Future<bool> showCustomAlertDialog({
   String? negativeActionLabel,
-  VoidCallback? onPositiveAction, {
+  VoidCallback? onPositiveAction,
   required BuildContext context,
   required String title,
   required String content,
-  required String positiveActionLabel,
+  String positiveActionLabel: "Ok",
 }) async {
   if (Platform.isIOS) {
     return await showCupertinoDialog(

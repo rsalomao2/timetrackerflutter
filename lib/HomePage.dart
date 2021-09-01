@@ -33,7 +33,9 @@ class HomePage extends StatelessWidget {
   }
 
   void _showSingoutConfirmation() {
-    showCustomAlertDialog("Cancel", _signOut,
+    showCustomAlertDialog(
+        negativeActionLabel: "Cancel",
+        onPositiveAction: _signOut,
         context: context,
         title: "Sign out",
         content: "Are you sure do you want signout from app",
