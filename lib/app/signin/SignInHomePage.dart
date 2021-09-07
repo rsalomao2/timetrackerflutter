@@ -15,8 +15,9 @@ class SignInPage extends StatelessWidget {
   const SignInPage({Key? key, required this.bloc}) : super(key: key);
 
   static Widget create(BuildContext context) {
+    final auth = Provider.of<AuthBase>(context, listen: false);
     return Provider<SignInBloc>(
-        create: (_) => SignInBloc(),
+        create: (_) => SignInBloc(auth),
         dispose: (_, bloc) => bloc.dispose(),
         child: Consumer<SignInBloc>(
             builder: (_, bloc, __) => SignInPage(bloc: bloc)));
@@ -51,7 +52,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.black87,
             imagePath: "assets/images/google-logo.png",
             backgroundColor: Colors.white70,
-            onClickListener: isLoading ? null : () => _signInGoogle(context),
+            onClickListener: isLoading ? null : () => bloc.signInGoogle(),
           ),
           SizedBox(height: 8),
           SignInImageButton(
@@ -59,7 +60,7 @@ class SignInPage extends StatelessWidget {
             textColor: Colors.white,
             imagePath: "assets/images/facebook-logo.png",
             backgroundColor: Color(0xFF334D92),
-            onClickListener: isLoading ? null : () => _signInFacebook(context),
+            onClickListener: isLoading ? null : () => bloc.signInFacebook(),
           ),
           SizedBox(height: 8),
           SignInButton(
@@ -79,52 +80,11 @@ class SignInPage extends StatelessWidget {
             text: "Go anonymous",
             textColor: Colors.white,
             backgroundColor: Colors.lime,
-            onClickListener:
-                isLoading ? null : () => _signInAnonymously(context),
+            onClickListener: isLoading ? null : () => bloc.signInAnonymously(),
           ),
         ],
       ),
     );
-  }
-
-  Future<void> _signInAnonymously(BuildContext context) async {
-    final auth = Provider.of<AuthBase>(context, listen: false);
-    try {
-      bloc.setIsLoadingStream(true);
-      await auth.singInAnonymously();
-      print("Signing SUCESS");
-    } on FirebaseException catch (e) {
-      print(e.toString());
-      _showErrorAlert(context, e);
-    } finally {
-      bloc.setIsLoadingStream(false);
-    }
-  }
-
-  Future<void> _signInGoogle(BuildContext context) async {
-    final auth = Provider.of<AuthBase>(context, listen: false);
-    try {
-      bloc.setIsLoadingStream(true);
-      auth.signInGoogle();
-      print("Signing Google SUCESS");
-    } on FirebaseException catch (e) {
-      print(e);
-      bloc.setIsLoadingStream(false);
-      _showErrorAlert(context, e);
-    }
-  }
-
-  Future<void> _signInFacebook(BuildContext context) async {
-    final auth = Provider.of<AuthBase>(context, listen: false);
-    try {
-      bloc.setIsLoadingStream(true);
-      auth.signInFacebook();
-      print("Signing Facebook SUCESS");
-    } on FirebaseException catch (e) {
-      print(e);
-      bloc.setIsLoadingStream(false);
-      _showErrorAlert(context, e);
-    }
   }
 
   void _signInEmail(BuildContext context) {
