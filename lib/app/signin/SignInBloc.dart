@@ -9,13 +9,13 @@ class SignInBloc {
 
   SignInBloc(this.auth);
 
-  Stream<bool> get isLoading => _isLoadingStream.stream;
-
   void dispose() {
     _isLoadingStream.close();
   }
 
-  void setIsLoadingStream(bool isLoading) => _isLoadingStream.add(isLoading);
+  void _setIsLoadingStream(bool isLoading) => _isLoadingStream.add(isLoading);
+
+  Stream<bool> get isLoading => _isLoadingStream.stream;
 
   Future<User?> signInAnonymously() async =>
       _sigIn(() => auth.singInAnonymously());
@@ -26,10 +26,10 @@ class SignInBloc {
 
   Future<User?> _sigIn(Future<User?> Function() sigInMethod) async {
     try {
-      setIsLoadingStream(true);
+      _setIsLoadingStream(true);
       return await sigInMethod.call();
     } catch (e) {
-      setIsLoadingStream(false);
+      _setIsLoadingStream(false);
       rethrow;
     }
   }
