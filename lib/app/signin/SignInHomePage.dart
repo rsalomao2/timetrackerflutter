@@ -1,29 +1,36 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/app/signin/SignInEmailPage.dart';
+import 'package:flutter_application_1/app/signin/SigninBloc.dart';
 import 'package:flutter_application_1/app/signin/widget/SignInButton.dart';
 import 'package:flutter_application_1/app/signin/widget/SignInImageButton.dart';
 import 'package:flutter_application_1/commonwidget/AlertDialogHelper.dart';
 import 'package:flutter_application_1/commonwidget/CustomToolBar.dart';
 import 'package:flutter_application_1/service/Auth.dart';
+import 'package:provider/provider.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({required this.auth});
-
-  final AuthBase auth;
-
-  @override
-  _SignInPageState createState() => _SignInPageState();
-}
-
-class _SignInPageState extends State<SignInPage> {
-  bool isLoading = false;
-  @override
-  Widget build(BuildContext context) {
-    return CustomToolBar("Time Tracker", _getBody(context));
+class SignInPage extends StatelessWidget {
+  static Widget create(BuildContext context) {
+    return Provider<SignInBloc>(
+      create: (_) => SignInBloc(),
+      child: SignInPage(),
+    );
   }
 
-  Widget _getBody(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
+    final bloc = Provider.of<SignInBloc>(context, listen: false);
+    return CustomToolBar(
+        "Time Tracker",
+        StreamBuilder<bool>(
+            stream: bloc.isLoading,
+            initialData: false,
+            builder: (context, snapshot) {
+              return _getBody(context, snapshot.data!);
+            }));
+  }
+
+  Widget _getBody(BuildContext context, bool isLoading) {
     return Padding(
       padding: EdgeInsets.all(12),
       child: Column(
@@ -32,7 +39,7 @@ class _SignInPageState extends State<SignInPage> {
         children: [
           SizedBox(
             height: 70,
-            child: _buildHeader(),
+            child: _buildHeader(isLoading),
           ),
           SizedBox(height: 48),
           SignInImageButton(
@@ -77,35 +84,44 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Future<void> _signInAnonymously(BuildContext context) async {
+    final bloc = Provider.of<SignInBloc>(context, listen: false);
+    final auth = Provider.of<AuthBase>(context, listen: false);
     try {
-      setState(() => isLoading = true);
-      print("Signing ANONIMOS");
-      await widget.auth.singInAnonymously();
+      bloc.setIsLoadingStream(true);
+      await auth.singInAnonymously();
       print("Signing SUCESS");
     } on FirebaseException catch (e) {
       print(e.toString());
       _showErrorAlert(context, e);
     } finally {
-      setState(() => isLoading = false);
+      bloc.setIsLoadingStream(false);
     }
   }
 
   Future<void> _signInGoogle(BuildContext context) async {
+    final bloc = Provider.of<SignInBloc>(context, listen: false);
+    final auth = Provider.of<AuthBase>(context, listen: false);
     try {
-      widget.auth.signInGoogle();
+      bloc.setIsLoadingStream(true);
+      auth.signInGoogle();
       print("Signing Google SUCESS");
     } on FirebaseException catch (e) {
       print(e);
+      bloc.setIsLoadingStream(false);
       _showErrorAlert(context, e);
     }
   }
 
   Future<void> _signInFacebook(BuildContext context) async {
+    final bloc = Provider.of<SignInBloc>(context, listen: false);
+    final auth = Provider.of<AuthBase>(context, listen: false);
     try {
-      widget.auth.signInFacebook();
+      bloc.setIsLoadingStream(true);
+      auth.signInFacebook();
       print("Signing Facebook SUCESS");
     } on FirebaseException catch (e) {
       print(e);
+      bloc.setIsLoadingStream(false);
       _showErrorAlert(context, e);
     }
   }
@@ -134,7 +150,7 @@ class _SignInPageState extends State<SignInPage> {
       );
   }
 
-  Widget _buildHeader() {
+  Widget _buildHeader(bool isLoading) {
     if (isLoading)
       return Center(child: CircularProgressIndicator());
     else

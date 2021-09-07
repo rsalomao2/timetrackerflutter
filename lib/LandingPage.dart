@@ -14,7 +14,7 @@ class LandingPage extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.active) {
           final user = snapshot.data;
           if (user == null)
-            return SignInPage(auth: auth);
+            return SignInPage.create(context);
           else
             return HomePage(context: context, auth: auth);
         } else
