@@ -10,16 +10,19 @@ import 'package:flutter_application_1/service/Auth.dart';
 import 'package:provider/provider.dart';
 
 class SignInPage extends StatelessWidget {
+  final SignInBloc bloc;
+
+  const SignInPage({Key? key, required this.bloc}) : super(key: key);
+
   static Widget create(BuildContext context) {
     return Provider<SignInBloc>(
-      create: (_) => SignInBloc(),
-      child: SignInPage(),
-    );
+        create: (_) => SignInBloc(),
+        child: Consumer<SignInBloc>(
+            builder: (_, bloc, __) => SignInPage(bloc: bloc)));
   }
 
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
     return CustomToolBar(
         "Time Tracker",
         StreamBuilder<bool>(
@@ -84,7 +87,6 @@ class SignInPage extends StatelessWidget {
   }
 
   Future<void> _signInAnonymously(BuildContext context) async {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
     final auth = Provider.of<AuthBase>(context, listen: false);
     try {
       bloc.setIsLoadingStream(true);
@@ -99,7 +101,6 @@ class SignInPage extends StatelessWidget {
   }
 
   Future<void> _signInGoogle(BuildContext context) async {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
     final auth = Provider.of<AuthBase>(context, listen: false);
     try {
       bloc.setIsLoadingStream(true);
@@ -113,7 +114,6 @@ class SignInPage extends StatelessWidget {
   }
 
   Future<void> _signInFacebook(BuildContext context) async {
-    final bloc = Provider.of<SignInBloc>(context, listen: false);
     final auth = Provider.of<AuthBase>(context, listen: false);
     try {
       bloc.setIsLoadingStream(true);
